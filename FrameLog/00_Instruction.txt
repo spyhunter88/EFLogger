@@ -1,0 +1,29 @@
+﻿I. WHAT DO WE WANT?
+- To inject FrameLog into any other DatabaseContext that you manual control over EntityState and SaveChange strategy.
+- Detach FrameLog out of DatabaseContext, you can easily Add/Remove using DI/IoC pattern.
+- Also, you can create your own Log data strategy because FrameLog use another context. You can use default Context is database or create another (email, file ...)
+
+II. STEP FROM FrameLog source
+1. First, you need create ILogging interface in a new Class Library.
+Then your Context will call 2 methods inside this interface (also check for null).
+Create you DI pattern to auto injection.
+
+2.1. Create ContextInfo, this instance will keeps information about your DataContext, include Entity list,
+WorkspaceMetadata, UnderlyingType and ObjectContext.
+
+2.2. Create LogContext and Entity class that implement TChangeSet, TObjectChange, TPropertyChange and TPrincipal.
+- LogContext'll be used to retrieve User information, ChangeSet, ObjectChange, PropertyChange for HistoryExplorer.
+- LogContext'll be used to save ChangSet, ObjectChange, PropertyChange into database.
+2.3. Create Helper.DataContextHepler copy some static methods from IObjectContextAdapter.
+2.4 Remove DbContextAdapter, DbContextAdapterAsync, IFrameLogContext, IFrameLogContextAdapter, ObjectContextAdapter, ObjectContextAdapterAsync, FrameLogModule and FrameLogModuleAsync.
+
+3. Create new class FrameLog that controls logging strategy, this class will work with internal class inside FrameLog library.
+- Copy Log() and ReBake() method from FrameLogModule into this. We will call this before and after Context.SaveChanges().
+
+4. Create LoggerModule and implement ILogging interface above.
+- Inside this, we create LogContext, FrameLog instance.
+- Start Log inside SaveChangePreCommit, Collect ChangeSet and save inside SaveChangePostCommit.
+
+5. Some minor fix because data flow works difference than FrameLog.
+- When Delete, the function GetRefenceForObject can not work because TryGetObjectStateEntry can not retrieve entity in ReBake phase, so we must save OriginalObject and fake this deferredObjectChanges (inside ChangeLogger.logScalarChanges()).
+- In Delete again, after retrieve OriginalObject ok, but the NewValue in ValuePair will be detach and throw Exception, to avoid that, we must save originalValue and fake the deferred of NewValue (inside ValuePair class).
