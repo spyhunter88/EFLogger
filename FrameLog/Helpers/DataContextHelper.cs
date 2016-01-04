@@ -54,7 +54,7 @@ namespace FrameLog.Helpers
         /// <summary>
         /// Return true if the object has a logging reference, otherwise false
         /// </summary>
-        public virtual bool ObjectHasReference(object entity)
+        public static bool ObjectHasReference(object entity)
         {
             if (entity == null)
                 return false;

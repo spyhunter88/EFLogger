@@ -109,7 +109,19 @@ namespace Logger.Tests
         // [TestMethod]
         public void DeleteReference()
         {
+            Claim claim = context.Claims
+                        .Where(x => x.ProgramName == "TEST")
+                        .Include(x => x.Requirements)
+                        .FirstOrDefault();
 
+            Requirement requirement = claim.Requirements.First();
+            claim.Requirements.Remove(requirement);
+
+            requirement.ObjectState = ObjectState.Deleted;
+            // claim.ObjectState = ObjectState.Modified;
+            context.SaveChanges();
+
+            Assert.IsNotNull(loggerModule.ChangeSet);
         }
     }
 }

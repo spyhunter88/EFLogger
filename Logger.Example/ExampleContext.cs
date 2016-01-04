@@ -41,15 +41,17 @@ namespace Logger.Example
             modelBuilder.Configurations.Add(new CategoryMap());
             modelBuilder.Configurations.Add(new CustomerMap());
             modelBuilder.Configurations.Add(new ClaimMap());
+            // modelBuilder.Entity<Claim>().ToTable("Claims");
             modelBuilder.Configurations.Add(new RequestMap());
-            modelBuilder.Configurations.Add(new RequirementMap());
+            // modelBuilder.Configurations.Add(new RequirementMap());
+            modelBuilder.Entity<Requirement>().ToTable("Requirements");
             modelBuilder.Configurations.Add(new DocumentMap());
             modelBuilder.Configurations.Add(new PaymentMap());
             modelBuilder.Configurations.Add(new AllocationMap());
             modelBuilder.Configurations.Add(new ClaimStatusMap());
 
             modelBuilder.Entity<Requirement>().HasRequired<Claim>(s => s.Claim)
-                .WithMany(s => s.Requirements).HasForeignKey(s => s.ClaimID);
+                .WithMany(s => s.Requirements); //.HasForeignKey(s => s.ClaimID);
 
             modelBuilder.Entity<Payment>().HasRequired<Claim>(s => s.Claim)
                 .WithMany(s => s.Payments).HasForeignKey(s => s.ClaimID);

@@ -14,7 +14,7 @@ namespace Logger.Example.Models
         }
 
         public int RequirementID { get; set; }
-        public int ClaimID { get; set; }
+        // public int ClaimID { get; set; }
         public String Name { get; set; }
         public String Operation { get; set; }
         public Int32? Target { get; set; }
@@ -29,6 +29,6 @@ namespace Logger.Example.Models
         public DateTime? LastEditTime { get; set; }
 
         // Mapping
-        public virtual Claim Claim { internal get; set; }
+        public virtual Claim Claim { get; set; }
     }
 }

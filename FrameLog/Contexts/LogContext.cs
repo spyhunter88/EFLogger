@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using FrameLog.Models;
 using FrameLog.Patterns.Models;
+using FrameLog.Helpers;
+using System.Data.Entity.Core.Objects;
 
 namespace FrameLog.Contexts
 {
@@ -43,22 +45,24 @@ namespace FrameLog.Contexts
 
         public bool ObjectHasReference(object model)
         {
-            throw new NotImplementedException();
+            return DataContextHelper.ObjectHasReference(model);
         }
 
-        public string GetReferenceForObject(object model)
+        public string GetReferenceForObject(ObjectContext context, object model)
         {
-            throw new NotImplementedException();
+            return DataContextHelper.GetReferenceForObject(context, model);
         }
 
         public string GetReferencePropertyForObject(object model)
         {
-            throw new NotImplementedException();
+            return DataContextHelper.GetReferencePropertyForObject(model);
+            // throw new NotImplementedException();
         }
 
-        public object GetObjectByReference(Type type, string raw)
+        public object GetObjectByReference(ObjectContext context, Type type, string raw)
         {
-            throw new NotImplementedException();
+            return DataContextHelper.GetObjectByReference(context, type, raw);
+            // throw new NotImplementedException();
         }
     }
 }

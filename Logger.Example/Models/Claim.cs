@@ -17,7 +17,7 @@ namespace Logger.Example.Models
             this.ClaimDocuments = new List<ClaimDocument>();
         }
 
-        public int ClaimID { get; set; }
+        public int ID { get; set; }
         public Int32? RequestID { get; set; }
         public Int16? StatusID { get; set; }
         public string EditStatus { get; set; }

@@ -12,7 +12,7 @@ namespace Logger.Example.Models.Mapping
         public ClaimMap()
         {
             // Primary Key
-            this.HasKey(t => t.ClaimID);
+            this.HasKey(t => t.ID);
 
             // Properties
             this.Property(t => t.EditStatus)
@@ -75,9 +75,9 @@ namespace Logger.Example.Models.Mapping
 
             // Mapping
             this.ToTable("Claims");
-            this.Property(t => t.ClaimID).HasColumnName("ClaimID");
+            this.Property(t => t.ID).HasColumnName("ID");
             this.Property(t => t.RequestID).HasColumnName("RequestID");
-            this.Property(t => t.StatusID).HasColumnName("Status");
+            this.Property(t => t.StatusID).HasColumnName("StatusID");
             this.Property(t => t.EditStatus).HasColumnName("EditStatus");
             this.Property(t => t.ClaimType).HasColumnName("ClaimType");
             this.Property(t => t.BuName).HasColumnName("BUName");

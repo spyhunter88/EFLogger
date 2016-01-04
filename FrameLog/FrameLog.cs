@@ -35,21 +35,14 @@ namespace FrameLog
         public void LogChanges(TPrincipal principal)
         {
             logger = new ChangeLogger<TChangeSet, TPrincipal>(contextInfo.ObjectContext, factory, filter);
-            contextInfo.ObjectContext.DetectChanges();
             oven = logger.Log(contextInfo.ObjectContext.ObjectStateManager);
         }
 
-        //public TChangeSet GetChanges(TPrincipal principal)
-        //{
-        //    if (oven.HasChangeSet)
-        //    {
-        //        TChangeSet changeSet = oven.Bake(DateTime.Now, principal);
-        //        return changeSet;
-        //    }
-
-        //    return default(TChangeSet);
-        //}
-
+        /// <summary>
+        /// Call in SyncPostCommit or call after Commit when use UnitOfWork transaction.
+        /// </summary>
+        /// <param name="principal"></param>
+        /// <returns></returns>
         public TChangeSet ReBake(TPrincipal principal)
         {
             if (oven.HasChangeSet)
