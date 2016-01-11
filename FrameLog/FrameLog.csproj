@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContextInfo.cs" />
+    <Compile Include="Contexts\HistoryContext.cs" />
     <Compile Include="Contexts\LogContext.cs" />
     <Compile Include="Exceptions\ChangesNotDetectedException.cs" />
     <Compile Include="Exceptions\InvalidFrameLogRecordException.cs" />

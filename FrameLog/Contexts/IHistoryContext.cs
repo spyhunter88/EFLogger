@@ -17,7 +17,7 @@ namespace FrameLog.Contexts
         /// Returns a unique reference that FrameLog uses to refer to the object
         /// in the logs. Normally the primary key.
         /// </summary>
-        string GetReferenceForObject(ObjectContext context, object model);
+        string GetReferenceForObject(object model);
         /// <summary>
         /// Returns the primary key property for an object
         /// </summary>
@@ -26,7 +26,7 @@ namespace FrameLog.Contexts
         /// Returns the object of the specified type that has the specified reference.
         /// GetReferenceForObject(GetObjectByReference(type, reference)) == reference
         /// </summary>
-        object GetObjectByReference(ObjectContext context, System.Type type, string raw);
+        object GetObjectByReference(System.Type type, string raw);
     }
 
     public interface IHistoryContext<TChangeSet, TPrincipal> : IHistoryContext

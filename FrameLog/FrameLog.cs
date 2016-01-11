@@ -31,7 +31,10 @@ namespace FrameLog
             Enabled = true;
         }
 
-        // Run in PreCommit phase to create Framelog module, IOven instance
+        /// <summary>
+        /// Run in PreCommit phase to create Framelog module, IOven instance
+        /// </summary>
+        /// <param name="principal"></param>
         public void LogChanges(TPrincipal principal)
         {
             logger = new ChangeLogger<TChangeSet, TPrincipal>(contextInfo.ObjectContext, factory, filter);
@@ -41,8 +44,6 @@ namespace FrameLog
         /// <summary>
         /// Call in SyncPostCommit or call after Commit when use UnitOfWork transaction.
         /// </summary>
-        /// <param name="principal"></param>
-        /// <returns></returns>
         public TChangeSet ReBake(TPrincipal principal)
         {
             if (oven.HasChangeSet)

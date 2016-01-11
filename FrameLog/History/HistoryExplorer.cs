@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using FrameLog.Translation;
 using FrameLog.Translation.Binders;
 using FrameLog.Patterns.Models;
+using System.Data.Entity.Core.Objects;
 
 namespace FrameLog.History
 {
@@ -19,15 +20,16 @@ namespace FrameLog.History
     public class HistoryExplorer<TChangeSet, TPrincipal>
         where TChangeSet : IChangeSet<TPrincipal>
     {
-        private IHistoryContext<TChangeSet, TPrincipal> db;
+        private IHistoryContext<TChangeSet, TPrincipal> historyContext;
         private IBindManager binder;
         private HistoryExplorerCloneStrategies cloneStrategy;
 
-        public HistoryExplorer(IHistoryContext<TChangeSet, TPrincipal> db, IBindManager binder = null, HistoryExplorerCloneStrategies cloneStrategy = HistoryExplorerCloneStrategies.Default)
+        public HistoryExplorer(IHistoryContext<TChangeSet, TPrincipal> historyContext, IBindManager binder = null, 
+            HistoryExplorerCloneStrategies cloneStrategy = HistoryExplorerCloneStrategies.Default)
         {
-            this.db = db;
-            this.binder = (binder ?? new ValueTranslationManager(db));
+            this.binder = (binder ?? new ValueTranslationManager(historyContext));
             this.cloneStrategy = cloneStrategy;
+            this.historyContext = historyContext;
         }
 
         /// <summary>
@@ -39,7 +41,7 @@ namespace FrameLog.History
             string typeName = typeof(TModel).Name;
             string propertyName = property.GetPropertyName();
             string propertyPrefix = propertyName + ".";
-            string reference = db.GetReferenceForObject(model);
+            string reference = historyContext.GetReferenceForObject(model);
             var propertyFunc = property.Compile();
             
             var objectChanges = changesTo(model)
@@ -113,7 +115,7 @@ namespace FrameLog.History
         /// </summary>
         protected virtual IOrderedQueryable<IObjectChange<TPrincipal>> changesTo<TModel>(TModel model)
         {
-            string reference = db.GetReferenceForObject(model);
+            string reference = historyContext.GetReferenceForObject(model);
             return changesTo<TModel>(reference);
         }
 
@@ -123,7 +125,7 @@ namespace FrameLog.History
         protected virtual IOrderedQueryable<IObjectChange<TPrincipal>> changesTo<TModel>(string reference)
         {
             string typeName = typeof(TModel).Name;
-            var changes = db.ObjectChanges
+            var changes = ObjectChanges
                 .Where(o => o.TypeName == typeName)
                 .Where(o => o.ObjectReference == reference)
                 .OrderBy(o => o.ChangeSet.Timestamp);
@@ -229,15 +231,59 @@ namespace FrameLog.History
         protected virtual IPropertyChange<TPrincipal> primaryKeyChange<T>(IObjectChange<TPrincipal> change)
         {
             var model = Activator.CreateInstance(typeof(T), true);
-            string primaryKeyField = db.GetReferencePropertyForObject(model);
+            string primaryKeyField = GetReferencePropertyForObject(model);
             return change.PropertyChanges
                 .SingleOrDefault(p => p.PropertyName == primaryKeyField);
-        } 
+        }
+
+        public bool ObjectHasReference(object model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetReferenceForObject(ObjectContext context, object model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetReferencePropertyForObject(object model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object GetObjectByReference(ObjectContext context, Type type, string raw)
+        {
+            throw new NotImplementedException();
+        }
 
         public HistoryExplorerCloneStrategies CloneStrategy
         {
             get { return cloneStrategy; }
             set { cloneStrategy = value; }
+        }
+
+        public IQueryable<IChangeSet<TPrincipal>> ChangeSets
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public IQueryable<IObjectChange<TPrincipal>> ObjectChanges
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public IQueryable<IPropertyChange<TPrincipal>> PropertyChanges
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

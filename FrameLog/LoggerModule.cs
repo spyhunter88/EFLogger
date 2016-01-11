@@ -16,12 +16,14 @@ namespace FrameLog
             this.user = user;
             this.contextInfo = contextInfo;
             context = new LogContext(connectionString);
+            context.ContextInfo = this.contextInfo;
         }
 
         public LoggerModule(string connectionString, ContextInfo contextInfo, int userId)
         {
             this.contextInfo = contextInfo;
             context = new LogContext(connectionString);
+            context.ContextInfo = this.contextInfo;
             this.user = context.Users.Find(userId);
         }
 
