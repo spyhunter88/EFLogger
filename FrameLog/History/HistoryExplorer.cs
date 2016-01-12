@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using FrameLog.Translation;
 using FrameLog.Translation.Binders;
 using FrameLog.Patterns.Models;
+using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 
 namespace FrameLog.History
@@ -126,6 +127,8 @@ namespace FrameLog.History
         {
             string typeName = typeof(TModel).Name;
             var changes = ObjectChanges
+                .Include(x => x.ChangeSet)
+                .Include(x => x.PropertyChanges)
                 .Where(o => o.TypeName == typeName)
                 .Where(o => o.ObjectReference == reference)
                 .OrderBy(o => o.ChangeSet.Timestamp);
@@ -248,7 +251,8 @@ namespace FrameLog.History
 
         public string GetReferencePropertyForObject(object model)
         {
-            throw new NotImplementedException();
+            // throw new NotImplementedException();
+            return historyContext.GetReferencePropertyForObject(model);
         }
 
         public object GetObjectByReference(ObjectContext context, Type type, string raw)
@@ -266,7 +270,7 @@ namespace FrameLog.History
         {
             get
             {
-                throw new NotImplementedException();
+                return historyContext.ChangeSets;
             }
         }
 
@@ -274,7 +278,7 @@ namespace FrameLog.History
         {
             get
             {
-                throw new NotImplementedException();
+                return historyContext.ObjectChanges;
             }
         }
 
@@ -282,7 +286,7 @@ namespace FrameLog.History
         {
             get
             {
-                throw new NotImplementedException();
+                return historyContext.PropertyChanges;
             }
         }
     }
